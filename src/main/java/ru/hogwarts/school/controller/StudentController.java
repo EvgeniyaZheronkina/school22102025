@@ -8,6 +8,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,9 +24,9 @@ public class StudentController {
     }
 
     @GetMapping
-    public Collection<Student> getAll(@RequestParam(required = false) Integer age,
-                                      @RequestParam(required = false) Integer min,
-                                      @RequestParam(required = false) Integer max) {
+    public List<Student> getAll(@RequestParam(required = false) Integer age,
+                                @RequestParam(required = false) Integer min,
+                                @RequestParam(required = false) Integer max) {
         if (age != null) {
             return studentService.getStudentByAge(age);
         }

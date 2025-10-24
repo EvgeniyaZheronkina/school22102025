@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.dto.FacultyWithStudentsDto;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,18 +25,14 @@ public class FacultyController {
         return ResponseEntity.ok(createdFaculty);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Faculty> get(@PathVariable Long id) {
-//        Faculty Faculty = facultyService.getStudentByIdInFaculty(id);
-//        if (Faculty == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.ok(Faculty);
-//    }
+    @GetMapping("/{id}")
+    public FacultyWithStudentsDto getFacultyById(@PathVariable Long id) {
+        return facultyService.getStudentByIdInFaculty(id);
+    }
 
     @GetMapping
-    public Collection<Faculty> findFaculty(@RequestParam (required = false) String name,
-                                           @RequestParam (required = false) String color) {
+    public List<Faculty> findFaculty(@RequestParam(required = false) String name,
+                                     @RequestParam(required = false) String color) {
         if (name != null && name.isBlank()) {
             return facultyService.findFacultyByName(name);
         }
