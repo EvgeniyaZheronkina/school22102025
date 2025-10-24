@@ -32,13 +32,15 @@ public class FacultyController {
 //    }
 
     @GetMapping
-    public Collection<Faculty> getAll() {
+    public Collection<Faculty> findFaculty(@RequestParam (required = false) String name,
+                                           @RequestParam (required = false) String color) {
+        if (name != null && name.isBlank()) {
+            return facultyService.findFacultyByName(name);
+        }
+        if (color != null && color.isBlank()) {
+            return facultyService.getFacultiesByColor(color);
+        }
         return facultyService.getAllStudentFaculty();
-    }
-
-    @GetMapping("{color}")
-    public Collection<Faculty> getFaculty(@PathVariable String color) {
-        return facultyService.getFacultiesByColor(color);
     }
 
     @PatchMapping

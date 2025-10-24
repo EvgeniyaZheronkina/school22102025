@@ -6,9 +6,6 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.StudentRepository;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -37,5 +34,9 @@ public class StudentService {
 
     public Collection<Student> getStudentByAge(int age) {
         return studentRepository.findStudentByAge(age);
+    }
+
+    public Collection<Student> findByAgeBetween(int min, int max) {
+        return studentRepository.findByAgeBetween(min, max);
     }
 }

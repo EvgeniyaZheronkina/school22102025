@@ -23,13 +23,16 @@ public class StudentController {
     }
 
     @GetMapping
-    public Collection<Student> getAll() {
+    public Collection<Student> getAll(@RequestParam(required = false) Integer age,
+                                      @RequestParam(required = false) Integer min,
+                                      @RequestParam(required = false) Integer max) {
+        if (age != null) {
+            return studentService.getStudentByAge(age);
+        }
+        if (min != null && max != null) {
+            return studentService.findByAgeBetween(min, max);
+        }
         return studentService.getAllStudent();
-    }
-
-    @GetMapping("{age}")
-    public Collection<Student> getFaculties(@PathVariable int age) {
-        return studentService.getStudentByAge(age);
     }
 
     @PatchMapping
