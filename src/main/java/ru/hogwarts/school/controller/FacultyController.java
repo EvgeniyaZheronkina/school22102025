@@ -33,10 +33,10 @@ public class FacultyController {
     @GetMapping
     public List<Faculty> findFaculty(@RequestParam(required = false) String name,
                                      @RequestParam(required = false) String color) {
-        if (name != null && name.isBlank()) {
+        if (name != null && !name.isBlank()) {
             return facultyService.findFacultyByName(name);
         }
-        if (color != null && color.isBlank()) {
+        if (color != null && !color.isBlank()) {
             return facultyService.getFacultiesByColor(color);
         }
         return facultyService.getAllStudentFaculty();

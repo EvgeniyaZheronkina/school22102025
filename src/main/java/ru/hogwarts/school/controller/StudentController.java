@@ -24,7 +24,7 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> getAll(@RequestParam(required = false) Integer age,
+    public Collection<Student> getAll(@RequestParam(required = false) Integer age,
                                 @RequestParam(required = false) Integer min,
                                 @RequestParam(required = false) Integer max) {
         if (age != null) {
