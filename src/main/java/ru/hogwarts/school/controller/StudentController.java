@@ -1,12 +1,16 @@
 package ru.hogwarts.school.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.StudentService;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,6 +19,7 @@ import java.util.List;
 @RequestMapping("/student")
 public class StudentController {
     private final StudentService studentService;
+
 
 
     @PostMapping
