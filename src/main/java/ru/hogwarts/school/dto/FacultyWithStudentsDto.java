@@ -3,6 +3,7 @@ package ru.hogwarts.school.dto;
 import lombok.Data;
 import ru.hogwarts.school.model.Faculty;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -12,7 +13,7 @@ public class FacultyWithStudentsDto {
     private String name;
     private String color;
 
-    private Set<StudentWithFacultyDto> students;
+    private List<StudentWithFacultyDto> students;
 
     public static FacultyWithStudentsDto of(Faculty faculty) {
         FacultyWithStudentsDto dto = new FacultyWithStudentsDto();
@@ -23,7 +24,7 @@ public class FacultyWithStudentsDto {
                 faculty.getStudents().stream()
                         .map(student ->
                             StudentWithFacultyDto.of(student))
-                        .collect(Collectors.toSet())
+                        .collect(Collectors.toList())
         );
         return dto;
     }

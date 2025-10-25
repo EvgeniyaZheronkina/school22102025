@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 
@@ -26,7 +27,7 @@ public class Faculty{
 
     @JsonIgnore
     @OneToMany(mappedBy = "faculty")
-    private Set<Student> students;
+    private List<Student> students;
 
 
 }
