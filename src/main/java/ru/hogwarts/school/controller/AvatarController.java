@@ -18,24 +18,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @RestController
+@RequestMapping("/avatar")
 @RequiredArgsConstructor
-@RequestMapping("avatar")
 public class AvatarController {
+
     private final AvatarService avatarService;
 
     @PostMapping(value = "/{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile file) throws IOException {
-        if (file.getSize() > 1024 * 300) {
+        if (file.getSize() > 1024 * 1024) {
             return ResponseEntity.badRequest().body("Файл слишком большой");
         }
-
         avatarService.uploadAvatar(id, file);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/{id}/preview")
+    @GetMapping(value = "/{id}/avatar/preview")
     public ResponseEntity<byte[]> downloadAvatar(@PathVariable Long id) {
         Avatar avatar = avatarService.findAvatar(id);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
         headers.setContentLength(avatar.getData().length);
@@ -59,5 +60,6 @@ public class AvatarController {
             is.transferTo(os);
         }
     }
+
 
 }

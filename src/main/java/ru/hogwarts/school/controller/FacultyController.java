@@ -2,15 +2,12 @@ package ru.hogwarts.school.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.dto.FacultyWithStudentsDto;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.FacultyService;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,9 +17,8 @@ public class FacultyController {
 
 
     @PostMapping
-    public ResponseEntity<Faculty> add(@RequestBody Faculty faculty) {
-        Faculty createdFaculty = facultyService.addFaculty(faculty);
-        return ResponseEntity.ok(createdFaculty);
+    public Faculty add(@RequestBody Faculty faculty) {
+       return facultyService.addFaculty(faculty);
     }
 
     @GetMapping("/{id}")
