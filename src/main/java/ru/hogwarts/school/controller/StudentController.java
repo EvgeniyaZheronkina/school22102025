@@ -14,6 +14,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.StudentService;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,51 +32,53 @@ public class StudentController {
     private final AvatarService avatarService;
 
     @PostMapping
-    public ResponseEntity<Student> add(
-            @RequestBody Student studentDto) {
-        return new ResponseEntity<>(studentService.addStudent(studentDto), HttpStatus.CREATED);
+    public Student add(@RequestBody Student student) {
+        return studentService.addStudent(student);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentInfo(@PathVariable Long id) {
-        Student student = studentService.findStudent(id);
-        if (student == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(student);
+    public Student getStudentInfo(@PathVariable Long id) {
+        return studentService.findStudent(id);
     }
 
     @GetMapping
-    public ResponseEntity<List<Student>> getAll(@RequestParam(required = false) Integer age,
+    public List<Student> getAll(@RequestParam(required = false) Integer age,
                                                 @RequestParam(required = false) Integer min,
                                                 @RequestParam(required = false) Integer max) {
         if (age != null) {
-            return ResponseEntity.ok(studentService.getStudentByAge(age));
-                    //studentService.getStudentByAge(age);
+            return studentService.getStudentByAge(age);
         }
         if (min != null && max != null) {
-            return ResponseEntity.ok(studentService.findByAgeBetween(min, max));
-                    //studentService.findByAgeBetween(min, max);
+            return studentService.findByAgeBetween(min, max);
         }
-        return ResponseEntity.ok(studentService.getAllStudent());
-                //studentService.getAllStudent();
+        return studentService.getAllStudent();
     }
 
     @PatchMapping
-    public ResponseEntity<Student> edit(@RequestBody Student student) {
-        Student foundStudent = studentService.editStudent(student);
-        if (foundStudent == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(foundStudent);
+    public Student edit(@RequestBody Student student) {
+        return studentService.editStudent(student);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable ("id") long id) throws IOException {
-        avatarService.deleteAvatar(id);
+    public void delete(@PathVariable("id") long id) throws IOException {
+        if (avatarService.findAvatar(id) != null) {
+            avatarService.deleteAvatar(id);
+        }
         studentService.deleteStudent(id);
-        return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/count-all-student")
+    public int getStudentAllCount() {
+        return studentService.getStudentAllCount();
+    }
 
+    @GetMapping("/average-students")
+    public double getStudentAverageAge() {
+        return studentService.getStudentAverageAge();
+    }
+
+    @GetMapping("/last-five-student")
+    public List<Student> findLastFiveStudent() {
+        return studentService.findLastFiveStudent();
+    }
 }

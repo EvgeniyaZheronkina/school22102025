@@ -60,5 +60,17 @@ public class StudentService {
         return studentRepository.findByAgeBetween(min, max);
     }
 
+    public Integer getStudentAllCount() {
+       return studentRepository.getStudentAllCount();
+    }
+
+    public Double getStudentAverageAge() {
+        return studentRepository.getStudentAverageAge();
+    }
+
+    public List<Student> findLastFiveStudent() {
+        return studentRepository.findLastFiveStudent();
+    }
+
 
 }

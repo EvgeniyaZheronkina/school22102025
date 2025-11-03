@@ -39,9 +39,8 @@ public class FacultyController {
     }
 
     @PatchMapping
-    public ResponseEntity<Faculty> edit(@RequestBody Faculty faculty) {
-        Faculty editFc = facultyService.editFaculty(faculty);
-        return ResponseEntity.ok(editFc);
+    public Faculty edit(@RequestBody Faculty faculty) {
+        return facultyService.editFaculty(faculty);
     }
 
     @DeleteMapping("/{id}")
