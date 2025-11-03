@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.dto.StudentWithFacultyDto;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.AvatarService;
@@ -30,8 +31,9 @@ public class StudentController {
     private final AvatarService avatarService;
 
     @PostMapping
-    public Student add(@RequestBody Student student) {
-        return studentService.addStudent(student);
+    public ResponseEntity<Student> add(
+            @RequestBody Student studentDto) {
+        return new ResponseEntity<>(studentService.addStudent(studentDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

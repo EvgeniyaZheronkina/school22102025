@@ -3,6 +3,7 @@ package ru.hogwarts.school.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import ru.hogwarts.school.dto.StudentWithFacultyDto;
 import ru.hogwarts.school.model.Student;
 
 import java.util.List;
@@ -20,8 +21,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query(value = "SELECT AVG(age) AS average FROM hogwarts", nativeQuery = true)
     List<Student> getStudentAverageAge();
 
-    @Query(value = "SELECT AVG(age) AS average FROM hogwarts", nativeQuery = true)
-    List<Student> getFiveStudent();
+    @Query(value = "SELECT * FROM hogwarts ORDER BY id DESC LIMIT 5", nativeQuery = true)
+    List<Student> findLastFiveStudent();
 
 
 }

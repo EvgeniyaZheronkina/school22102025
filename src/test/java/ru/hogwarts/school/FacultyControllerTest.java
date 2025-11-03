@@ -35,7 +35,6 @@ public class FacultyControllerTest {
         testFacultyWithStudentsDto.setName("Richard");
         testFacultyWithStudentsDto.setColor("blue");
 
-        testFacultyWithStudentsDto = facultyController.add(testFacultyWithStudentsDto);
     }
 
     @AfterEach

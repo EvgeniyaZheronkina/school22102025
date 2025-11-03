@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import ru.hogwarts.school.dto.StudentWithFacultyDto;
 
 import java.util.Collection;
 import java.util.List;

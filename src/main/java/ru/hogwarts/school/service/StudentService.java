@@ -7,19 +7,15 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.dto.StudentWithFacultyDto;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.AvatarRepository;
 import ru.hogwarts.school.repositories.StudentRepository;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -33,9 +29,9 @@ public class StudentService {
 
     }
 
-    public Student addStudent(Student student) {
-        student.setId(null);
-       return studentRepository.save(student);
+    public Student addStudent(Student studentDto) {
+        studentDto.setId(null);
+       return studentRepository.save(studentDto);
     }
 
     public List<Student> getAllStudent() {
@@ -47,7 +43,7 @@ public class StudentService {
     }
     //Не получается выкинуть ошибку со статусом Not_found
     public Student findStudent(long id) {
-        return studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Студент не найден"));
+        return studentRepository.findById(id).orElseThrow();
     }
 
     public void deleteStudent(Long id) throws IOException {
