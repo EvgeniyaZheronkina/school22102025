@@ -1,19 +1,11 @@
 package ru.hogwarts.school.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school.dto.StudentWithFacultyDto;
-import ru.hogwarts.school.model.Avatar;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
-import ru.hogwarts.school.repositories.AvatarRepository;
 import ru.hogwarts.school.repositories.StudentRepository;
 
-import java.awt.*;
 import java.io.*;
 import java.util.List;
 
@@ -29,9 +21,22 @@ public class StudentService {
 
     }
 
-    public Student addStudent(Student studentDto) {
-        studentDto.setId(null);
-       return studentRepository.save(studentDto);
+    public Student addStudent(Student student) {
+        student.setId(null);
+        return studentRepository.save(student);
+    }
+
+    public Student addFacultyByIdInStudent(Long id, Faculty faculty) {
+        return studentRepository.findById(id)
+                .map(it -> {
+                    Student dto = new Student();
+                    dto.setId(it.getId());
+                    dto.setName(it.getName());
+                    dto.setAge(it.getAge());
+                    dto.setFaculty(faculty);
+                    return studentRepository.save(dto);
+                }).orElse(null);
+
     }
 
     public List<Student> getAllStudent() {
@@ -41,6 +46,7 @@ public class StudentService {
     public Student editStudent(Student student) {
         return studentRepository.save(student);
     }
+
     //Не получается выкинуть ошибку со статусом Not_found
     public Student findStudent(long id) {
         return studentRepository.findById(id).orElseThrow();
@@ -61,7 +67,7 @@ public class StudentService {
     }
 
     public Integer getStudentAllCount() {
-       return studentRepository.getStudentAllCount();
+        return studentRepository.getStudentAllCount();
     }
 
     public Double getStudentAverageAge() {
@@ -72,5 +78,55 @@ public class StudentService {
         return studentRepository.findLastFiveStudent();
     }
 
+    public void printParallel() {
+        List<Student> students = studentRepository.findAll();
+
+        System.out.println("Первый студент - " + students.get(0).getName());
+        System.out.println("Второй студент -" + students.get(1).getName());
+
+        new Thread(() -> {
+            try {
+                System.out.println("Третий студент - " + students.get(2).getName());
+                Thread.sleep(300);
+                System.out.println("Четвертый студент -" + students.get(3).getName());
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+
+        new Thread(() -> {
+            try {
+                System.out.println("Пятый студент - " + students.get(4).getName());
+                Thread.sleep(300);
+                System.out.println("Шестой студент -" + students.get(5).getName());
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+    }
+
+    public void printSynchronizedParallel() {
+        List<Student> students = studentRepository.findAll();
+
+        printNameStudent(students, 0);
+        printNameStudent(students, 1);
+
+        new Thread(() -> {
+            printNameStudent(students, 2);
+            printNameStudent(students, 3);
+
+        }).start();
+
+        new Thread(() -> {
+            printNameStudent(students, 4);
+            printNameStudent(students, 5);
+        }).start();
+    }
+
+    private synchronized void printNameStudent(List<Student> students, int number) {
+        System.out.println(number + "студент - " + students.get(number).getName());
+    }
 
 }

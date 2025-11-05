@@ -10,6 +10,7 @@ public class StudentWithFacultyDto {
     private String name;
     private int age;
 
+
     public static StudentWithFacultyDto of(Student student) {
         StudentWithFacultyDto studentWithFacultyDto = new StudentWithFacultyDto();
         studentWithFacultyDto.setId(student.getId());

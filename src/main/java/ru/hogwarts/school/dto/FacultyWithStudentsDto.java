@@ -13,7 +13,6 @@ public class FacultyWithStudentsDto {
     private long id;
     private String name;
     private String color;
-
     private List<StudentWithFacultyDto> students;
 
     public static FacultyWithStudentsDto of(Faculty faculty) {

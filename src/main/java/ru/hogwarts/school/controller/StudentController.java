@@ -1,31 +1,19 @@
 package ru.hogwarts.school.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school.dto.StudentWithFacultyDto;
-import ru.hogwarts.school.model.Avatar;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repositories.FacultyRepository;
 import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.StudentService;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/student")
+@RequestMapping("/students")
 public class StudentController {
 
     private final StudentService studentService;
@@ -34,6 +22,11 @@ public class StudentController {
     @PostMapping
     public Student add(@RequestBody Student student) {
         return studentService.addStudent(student);
+    }
+
+    @PostMapping("/{id}")
+    public Student getFacultyById(@PathVariable Long id, @RequestBody Faculty faculty) {
+        return studentService.addFacultyByIdInStudent(id, faculty);
     }
 
     @GetMapping("/{id}")
@@ -81,4 +74,15 @@ public class StudentController {
     public List<Student> findLastFiveStudent() {
         return studentService.findLastFiveStudent();
     }
+
+    @GetMapping("/print-parallel")
+    public void printParallel() {
+        studentService.printParallel();
+    }
+
+    @GetMapping("/print-synchronized")
+    public void printSynchronizedParallel() {
+        studentService.printSynchronizedParallel();
+    }
+
 }
