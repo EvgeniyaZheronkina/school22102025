@@ -1,51 +1,88 @@
 package ru.hogwarts.school.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repositories.FacultyRepository;
+import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.StudentService;
 
-import java.util.Collection;
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/student")
+@RequestMapping("/students")
 public class StudentController {
-    private final StudentService studentService;
 
+    private final StudentService studentService;
+    private final AvatarService avatarService;
 
     @PostMapping
     public Student add(@RequestBody Student student) {
-        Student createdStudent = studentService.addStudent(student);
-        return createdStudent;
+        return studentService.addStudent(student);
+    }
+
+    @PostMapping("/{id}")
+    public Student getFacultyById(@PathVariable Long id, @RequestBody Faculty faculty) {
+        return studentService.addFacultyByIdInStudent(id, faculty);
+    }
+
+    @GetMapping("/{id}")
+    public Student getStudentInfo(@PathVariable Long id) {
+        return studentService.findStudent(id);
     }
 
     @GetMapping
-    public Collection<Student> getAll() {
+    public List<Student> getAll(@RequestParam(required = false) Integer age,
+                                                @RequestParam(required = false) Integer min,
+                                                @RequestParam(required = false) Integer max) {
+        if (age != null) {
+            return studentService.getStudentByAge(age);
+        }
+        if (min != null && max != null) {
+            return studentService.findByAgeBetween(min, max);
+        }
         return studentService.getAllStudent();
     }
 
-    @GetMapping("{age}")
-    public Collection<Student> getFaculties(@PathVariable int age) {
-        return studentService.getStudentByAge(age);
-    }
-
     @PatchMapping
-    public ResponseEntity<Student> edit(@RequestBody Student student) {
-        Student editSt = studentService.editStudent(student);
-        return ResponseEntity.ok(editSt);
+    public Student edit(@RequestBody Student student) {
+        return studentService.editStudent(student);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Student> delete(@PathVariable Long id) {
-        Student student = studentService.deleteStudent(id);
-        if (student == null) {
-            return ResponseEntity.notFound().build();
+    public void delete(@PathVariable("id") long id) throws IOException {
+        if (avatarService.findAvatar(id) != null) {
+            avatarService.deleteAvatar(id);
         }
-        return ResponseEntity.ok(student);
+        studentService.deleteStudent(id);
     }
 
+    @GetMapping("/count-all-student")
+    public int getStudentAllCount() {
+        return studentService.getStudentAllCount();
+    }
+
+    @GetMapping("/average-students")
+    public double getStudentAverageAge() {
+        return studentService.getStudentAverageAge();
+    }
+
+    @GetMapping("/last-five-student")
+    public List<Student> findLastFiveStudent() {
+        return studentService.findLastFiveStudent();
+    }
+
+    @GetMapping("/print-parallel")
+    public void printParallel() {
+        studentService.printParallel();
+    }
+
+    @GetMapping("/print-synchronized")
+    public void printSynchronizedParallel() {
+        studentService.printSynchronizedParallel();
+    }
 
 }
