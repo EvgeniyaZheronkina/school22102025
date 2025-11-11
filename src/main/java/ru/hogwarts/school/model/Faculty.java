@@ -4,13 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import ru.hogwarts.school.dto.StudentWithFacultyDto;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
