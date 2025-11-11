@@ -26,7 +26,7 @@ public class StudentController {
 
     @PostMapping("/{id}")
     public Student getFacultyById(@PathVariable Long id, @RequestBody Faculty faculty) {
-        return studentService.addFacultyByIdInStudent(id, faculty);
+        return studentService.addFacultyToStudentById(id, faculty);
     }
 
     @GetMapping("/{id}")
@@ -82,7 +82,7 @@ public class StudentController {
 
     @GetMapping("/print-synchronized")
     public void printSynchronizedParallel() {
-        studentService.printSynchronizedParallel();
+        studentService.printSynchronized();
     }
 
 }

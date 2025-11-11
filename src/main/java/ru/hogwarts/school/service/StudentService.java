@@ -1,6 +1,9 @@
 package ru.hogwarts.school.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
@@ -21,64 +24,88 @@ public class StudentService {
 
     }
 
+    Logger logger = LoggerFactory.getLogger(StudentService.class);
+
     public Student addStudent(Student student) {
+        logger.info("Was invoked method for create student");
         student.setId(null);
-        return studentRepository.save(student);
+        Student saveStudent = studentRepository.save(student);
+        logger.debug("A student was created in the database upon request - {}.", saveStudent);
+        return saveStudent;
     }
 
-    public Student addFacultyByIdInStudent(Long id, Faculty faculty) {
+    public Student addFacultyToStudentById(Long id, Faculty faculty) {
+        logger.info("Was invoked method for add faculty to student by Id");
         return studentRepository.findById(id)
                 .map(it -> {
+                    if (it.getFaculty() != null) {
+                        logger.warn("Данный студент уже приписан к факультету: {}", faculty.getName());
+                        return null;
+                    }
                     Student dto = new Student();
                     dto.setId(it.getId());
                     dto.setName(it.getName());
                     dto.setAge(it.getAge());
                     dto.setFaculty(faculty);
+                    logger.debug("Студенту присвоен факультет {}", dto);
                     return studentRepository.save(dto);
-                }).orElse(null);
-
+                }).orElseThrow();
     }
 
     public List<Student> getAllStudent() {
+        logger.info("Was invoked method for get all students");
         return studentRepository.findAll();
     }
 
     public Student editStudent(Student student) {
+        logger.info("Was invoked method for change student.");
         return studentRepository.save(student);
     }
 
     //Не получается выкинуть ошибку со статусом Not_found
     public Student findStudent(long id) {
-        return studentRepository.findById(id).orElseThrow();
+        logger.info("Was invoked method for find student by Id.");
+        Student findStudent = studentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Студент не найден"));;
+        logger.debug("A student - {}, was found by id - {}.", findStudent.getName(), id);
+        return findStudent;
     }
 
     public void deleteStudent(Long id) throws IOException {
+        logger.info("Was invoked method for delete student by id.");
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Студент не найден"));
+        logger.debug("{} was delete.", student.getName());
         studentRepository.deleteById(id);
     }
 
     public List<Student> getStudentByAge(int age) {
+        logger.info("Was invoked method for get students by age.");
         return studentRepository.findStudentByAge(age);
     }
 
     public List<Student> findByAgeBetween(int min, int max) {
+        logger.info("Was invoked method for get students by age between period.");
         return studentRepository.findByAgeBetween(min, max);
     }
 
     public Integer getStudentAllCount() {
+        logger.info("Was invoked method for get count all students.");
         return studentRepository.getStudentAllCount();
     }
 
     public Double getStudentAverageAge() {
+        logger.info("Was invoked method for get average age student.");
         return studentRepository.getStudentAverageAge();
     }
 
     public List<Student> findLastFiveStudent() {
+        logger.info("Was invoked method for get 5 last students.");
         return studentRepository.findLastFiveStudent();
     }
 
     public void printParallel() {
+        logger.info("Was invoked method for get all students names in parallel mode.");
         List<Student> students = studentRepository.findAll();
 
         System.out.println("Первый студент - " + students.get(0).getName());
@@ -107,7 +134,8 @@ public class StudentService {
         }).start();
     }
 
-    public void printSynchronizedParallel() {
+    public void printSynchronized() {
+        logger.info("Was invoked method for get all students names in parallel mode with synchronized.");
         List<Student> students = studentRepository.findAll();
 
         printNameStudent(students, 0);
@@ -127,6 +155,13 @@ public class StudentService {
 
     private synchronized void printNameStudent(List<Student> students, int number) {
         System.out.println(number + "студент - " + students.get(number).getName());
+    }
+
+    private void validateId(long id)  {
+        if (studentRepository.findById(id).isEmpty()) {
+            logger.error("There is not student with id = {}.", id);
+            throw new RuntimeException("Студент с данным Id не найден");
+        }
     }
 
 }
