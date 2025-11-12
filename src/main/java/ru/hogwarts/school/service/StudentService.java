@@ -104,6 +104,30 @@ public class StudentService {
         return studentRepository.findLastFiveStudent();
     }
 
+    public List<String> getStudentsNameWithA() {
+        logger.info("Was invoked method for get all students who have name with A.");
+        List<Student> students = studentRepository.findAll();
+        List<String> sortedStudents = students.stream()
+                .filter(e -> e.getName().toUpperCase().startsWith("A"))
+                .map(Student::getName)
+                .sorted()
+                .toList();
+        logger.debug("The list of students whose names begin with A in the database is {}", sortedStudents);
+        return sortedStudents;
+    }
+
+    public Double getAverageAgeStudentsStream() {
+        logger.info("Was invoked method for get average age aa students.");
+        List<Student> students = studentRepository.findAll();
+        double averageAge = students.stream()
+                .mapToDouble(Student::getAge)
+                .average()
+                .getAsDouble();
+        logger.debug("The average age of a student in the database is {}", averageAge);
+        return averageAge;
+    }
+
+
     public void printParallel() {
         logger.info("Was invoked method for get all students names in parallel mode.");
         List<Student> students = studentRepository.findAll();
