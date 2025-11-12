@@ -46,6 +46,15 @@ public class StudentController {
         }
         return studentService.getAllStudent();
     }
+    @GetMapping("/students_with_A")
+    public List<String> getStudentsNameWithA() {
+        return studentService.getStudentsNameWithA();
+    }
+
+    @GetMapping("/average_age")
+    public Double getAverageAgeStudentsStream() {
+        return studentService.getAverageAgeStudentsStream();
+    }
 
     @PatchMapping
     public Student edit(@RequestBody Student student) {

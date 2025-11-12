@@ -26,6 +26,11 @@ public class FacultyController {
         return facultyService.getStudentByIdInFaculty(id);
     }
 
+    @GetMapping("/long_name")
+    public String findLongNameFaculty() {
+        return facultyService.findLongNameFaculty();
+    }
+
     @GetMapping
     public List<Faculty> findFaculty(@RequestParam(required = false) String name,
                                      @RequestParam(required = false) String color) {
@@ -46,6 +51,11 @@ public class FacultyController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
+    }
+
+    @GetMapping("/number")
+    public Long getNumber() {
+        return facultyService.getNumber();
     }
 
 
