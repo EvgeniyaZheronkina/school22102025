@@ -35,7 +35,7 @@ public class FacultyController {
         if (color != null && !color.isBlank()) {
             return facultyService.getFacultiesByColor(color);
         }
-        return facultyService.getAllStudentFaculty();
+        return facultyService.getAllFaculty();
     }
 
     @PatchMapping

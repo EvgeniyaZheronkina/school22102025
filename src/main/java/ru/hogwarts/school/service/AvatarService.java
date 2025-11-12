@@ -2,12 +2,12 @@ package ru.hogwarts.school.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school.dto.StudentWithFacultyDto;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.AvatarRepository;
@@ -35,8 +35,12 @@ public class AvatarService {
     @Value("${path.to.avatars.folder}")
     private String avatarDir;
 
+    Logger logger = LoggerFactory.getLogger(Avatar.class);
+
 
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
+        logger.info("Was invoked method for upload avatar.");
+
         Student student = studentService.findStudent(studentId);
 
         Path filePath = Path.of(avatarDir, studentId + "." + getExtensions(Objects.requireNonNull(file.getOriginalFilename())));
@@ -62,6 +66,8 @@ public class AvatarService {
     }
 
     public void deleteAvatar(Long id) throws IOException {
+        logger.info("Was invoked method for delete avatar.");
+
         Optional<Avatar> avatarOptional = avatarRepository.findByStudentId(id);
         if (avatarOptional.isPresent()) {
             Avatar avatar = avatarOptional.get();
@@ -72,6 +78,7 @@ public class AvatarService {
     }
 
     public Avatar findAvatar(Long studentId) {
+        logger.info("Was invoked method for find student avatar.");
         return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
     }
 
